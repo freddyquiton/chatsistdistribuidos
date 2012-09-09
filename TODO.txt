@@ -1,0 +1,8 @@
+Servidor:
+Refactorizar codigo para poder realizar un buen control de concurrencia, recurso compartido critico:
+Base de datos de usuario
+Sesiones de usuario (Aun no programado)
+
+Cliente:
+Validacion de datos
+Sockets
