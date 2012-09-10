@@ -43,6 +43,7 @@ public class RegisterUserController {
 		User newUser = new User(userName, password, firstName, lastName, email);
 		if(!dataBase.addUser(newUser))
 			throw new RegisterUserException("Error adding user");
+		System.out.println("User registered: " + dataBase.searchUser(userName).getUsername());
 		saveDataBaseFile();
 	}
 	
