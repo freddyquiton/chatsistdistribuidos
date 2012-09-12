@@ -4,18 +4,21 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import chat.server.model.UserDatabase;
 import chat.server.threading.ConnectionThread;
 
 public class ServerManager {
-	ServerSocket server;
+	private ServerSocket server;
+	private UserDatabase database;
 	
-	public ServerManager(int port)
+	public ServerManager(int port, UserDatabase theDatabase)
 	{
 		try {
 			server = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		database = theDatabase;
 	}
 	
 	public void runServer()
@@ -39,7 +42,7 @@ public class ServerManager {
 		
 		connection = server.accept();
 		System.out.println("Connection accepted from... " + connection.getInetAddress().getHostAddress());
-		Thread thread = new Thread(new ConnectionThread(connection));
+		Thread thread = new Thread(new ConnectionThread(connection, database));
 		
 		thread.start();
 	}

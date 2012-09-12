@@ -1,8 +1,6 @@
 package chat.client.view;
 
 import java.awt.FlowLayout;
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -40,12 +38,12 @@ public class Register extends JFrame {
 		usernameTxt = new JTextField(20);
 		add(usernameTxt);
 
-		passwordLabel = new JLabel("Contraseña:");
+		passwordLabel = new JLabel("Contraseï¿½a:");
 		add(passwordLabel);
 		passwordTxt = new JPasswordField(20);
 		add(passwordTxt);
 
-		repasswordLabel = new JLabel("Confirme Contraseña:");
+		repasswordLabel = new JLabel("Confirme Contraseï¿½a:");
 		add(repasswordLabel);
 		repasswordTxt = new JPasswordField(20);
 		add(repasswordTxt);
