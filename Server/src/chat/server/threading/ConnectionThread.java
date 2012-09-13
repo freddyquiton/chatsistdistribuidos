@@ -8,15 +8,18 @@ import java.net.Socket;
 import chat.common.tools.Messages;
 import chat.server.controller.RegisterUserController;
 import chat.server.exceptions.RegisterUserException;
+import chat.server.model.UserDatabase;
 
 public class ConnectionThread implements Runnable {
 	private Socket socket;
 	private ObjectOutputStream output;
 	private ObjectInputStream input;
+	private UserDatabase database;
 
-	public ConnectionThread(Socket theSocket)
+	public ConnectionThread(Socket theSocket, UserDatabase theDatabase)
 	{
 		socket = theSocket;
+		database = theDatabase;
 	}
 	
 	@Override
@@ -27,7 +30,6 @@ public class ConnectionThread implements Runnable {
 			
 			if (firstMessage.equals(Messages.REGISTER))
 			{
-				output.writeObject(Messages.OK);
 				registerUser();
 			}
 		} catch (IOException ioException) {
@@ -41,6 +43,8 @@ public class ConnectionThread implements Runnable {
 	}
 
 	private void registerUser() throws ClassNotFoundException, IOException {
+		output.writeObject(Messages.OK);
+		
 		String userName = (String)input.readObject();
 		String password = (String)input.readObject();
 		String rePassword = (String)input.readObject();
@@ -49,7 +53,7 @@ public class ConnectionThread implements Runnable {
 		String email = (String)input.readObject();
 		
 		try {
-			RegisterUserController controller = new RegisterUserController();
+			RegisterUserController controller = new RegisterUserController(database);
 			controller.RegisterUser(userName, password, rePassword, firstName, lastName, email);
 			output.writeObject(Messages.OK);
 		} catch (RegisterUserException e) {
