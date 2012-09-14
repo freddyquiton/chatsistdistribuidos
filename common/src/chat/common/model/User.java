@@ -60,7 +60,7 @@ public class User implements Serializable {
 	
 	public boolean checkPassword(String thePassword)
 	{
-		return password == Encripter.encryptPassword(thePassword);
+		return password.equals(Encripter.encryptPassword(thePassword));
 	}
 	
 }

@@ -1,0 +1,47 @@
+<project name="Chat" default="jar" basedir=".">
+	<property name="classes" location="classes" />
+	<property name="dist" location="dist" />
+	
+	<target name="init">
+		<mkdir dir="${classes}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${classes}/common" />
+		<mkdir dir="${classes}/Server" />
+		<mkdir dir="${classes}/Client" />
+	</target>
+	
+	<target name="compile" depends="init">
+		<javac srcdir="common/src" destdir="${classes}/common" />
+		<javac srcdir="Server/src" destdir="${classes}/Server">
+			<classpath>
+			  <pathelement path="${classes}/common"/>			  
+			</classpath>
+		</javac>
+		<javac srcdir="Client/src" destdir="${classes}/Client">
+			<classpath>
+			  <pathelement path="${classes}/common"/>			  
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar jarfile="${dist}/common.jar" basedir="${classes}/common" />
+		<jar jarfile="${dist}/Server.jar" basedir="${classes}/Server">
+			<manifest>
+					<attribute name="Main-Class" value="chat.server.Main" />					
+					<attribute name="Class-Path" value="common.jar" />
+			</manifest>
+		</jar>
+		<jar jarfile="${dist}/Client.jar" basedir="${classes}/Client">
+			<manifest>
+					<attribute name="Main-Class" value="chat.client.Main" />					
+					<attribute name="Class-Path" value="common.jar" />
+			</manifest>
+		</jar>		
+	</target>
+	
+	<target name="clean">
+		<delete dir="${classes}" />
+		<delete dir="${dist}" />
+	</target>
+</project>
