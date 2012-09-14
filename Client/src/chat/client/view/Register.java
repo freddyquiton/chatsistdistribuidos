@@ -42,13 +42,13 @@ public class Register extends JFrame {
 		add(usernameTxt);
 		final int uslimite = 10;
 
-		passwordLabel = new JLabel("Contraseï¿½a:");
+		passwordLabel = new JLabel("Contraseña:");
 		add(passwordLabel);
 		passwordTxt = new JPasswordField(20);
 		add(passwordTxt);
 		final int passlimite = 10;
 
-		repasswordLabel = new JLabel("Confirme Contraseï¿½a:");
+		repasswordLabel = new JLabel("Confirme Contraseña:");
 		add(repasswordLabel);
 		repasswordTxt = new JPasswordField(20);
 		add(repasswordTxt);
