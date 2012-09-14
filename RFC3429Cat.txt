@@ -25,17 +25,7 @@ Lista de conectados
 C: CONTACTLIST
 S: OK | Mensaje de error
 S: BEGINLIST
-S: Us1
-S: Us2
-S: Us3
-S: .
-
-Chatear con alguien (Fase de pedir al servidor datos del otro contacto)
-C: CHAT
-S: OK | Mensaje de error
-C: username
-S: OK | Mensaje de error
-S: IP
+S: SessionList
 
 Chatear con alguien fase de chat
 C1: Abre conexion

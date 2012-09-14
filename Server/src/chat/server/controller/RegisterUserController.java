@@ -14,7 +14,7 @@ public class RegisterUserController {
 		database = theDatabase;
 	}
 	
-	public void RegisterUser(String userName, String password, String rePassword, 
+	public void registerUser(String userName, String password, String rePassword, 
 							String firstName, String lastName, String email) throws RegisterUserException
 	{
 		if(database.searchUser(userName) != null)
