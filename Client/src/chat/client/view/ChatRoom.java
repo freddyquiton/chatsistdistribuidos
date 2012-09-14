@@ -62,10 +62,15 @@ public class ChatRoom extends JFrame{
 		//MENSAJES 
 		Box box = Box.createHorizontalBox();
 		String demo = "";
-		writeTxt = new JTextArea(demo,5,15);
+		writeTxt = new JTextArea(demo,5,10);
 		box.add(new JScrollPane(writeTxt));
 		envJButton = new JButton("Enviar");
 		box.add(envJButton);
+		
+		writelate = new JTextArea(20,20);
+	    writelate.setEditable(false);
+	    box.add(new JScrollPane(writelate));
+	    
 		envJButton.addActionListener(
 				new ActionListener() {
 					@Override
@@ -73,9 +78,9 @@ public class ChatRoom extends JFrame{
 						writelate.setText(writeTxt.getText());
 					}
 				});
-	    writelate = new JTextArea(20,20);
+	    /*writelate = new JTextArea(20,20);
 	    writelate.setEditable(false);
-	    box.add(new JScrollPane(writelate));
+	    box.add(new JScrollPane(writelate));*/
 	    add(box);
 		
 	}
