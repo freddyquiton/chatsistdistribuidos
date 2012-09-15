@@ -46,12 +46,12 @@ public class Register extends JFrame {
 		usernameTxt = new JTextField(20);
 		add(usernameTxt, 1);
 		
-		passwordLabel = new JLabel("Contraseña:");
+		passwordLabel = new JLabel("ContraseÃ±a:");
 		add(passwordLabel, 2);
 		passwordTxt = new JPasswordField(20);
 		add(passwordTxt, 3);
 
-		repasswordLabel = new JLabel("Confirme Contraseña:");
+		repasswordLabel = new JLabel("Confirme ContraseÃ±a:");
 		add(repasswordLabel, 4);
 		repasswordTxt = new JPasswordField(20);
 		add(repasswordTxt, 5);

@@ -11,13 +11,13 @@
 	</target>
 	
 	<target name="compile" depends="init">
-		<javac srcdir="common/src" destdir="${classes}/common" />
-		<javac srcdir="Server/src" destdir="${classes}/Server">
+		<javac srcdir="common/src" destdir="${classes}/common" includeantruntime="false"/>
+		<javac srcdir="Server/src" destdir="${classes}/Server" includeantruntime="false">
 			<classpath>
 			  <pathelement path="${classes}/common"/>			  
 			</classpath>
 		</javac>
-		<javac srcdir="Client/src" destdir="${classes}/Client">
+		<javac srcdir="Client/src" destdir="${classes}/Client" includeantruntime="false">
 			<classpath>
 			  <pathelement path="${classes}/common"/>			  
 			</classpath>
