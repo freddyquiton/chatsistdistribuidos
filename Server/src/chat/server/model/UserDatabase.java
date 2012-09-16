@@ -69,7 +69,7 @@ public class UserDatabase {
 		try {
 			output = new ObjectOutputStream(new FileOutputStream(userDatabaseFile));
 			
-			output.writeObject(userList);
+			output.writeObject(userList);			
 		}  catch(IOException ioException)
 		{
 			System.err.println("Error writing the file");

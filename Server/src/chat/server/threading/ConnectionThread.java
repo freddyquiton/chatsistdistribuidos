@@ -50,6 +50,7 @@ public class ConnectionThread implements Runnable {
 					logout();					
 				} else {
 					output.writeObject("Error!! unknow message");
+					output.flush();
 					firstMessage = Messages.LOGOUT;					
 				}
 			} while (!firstMessage.equals(Messages.LOGOUT));
@@ -72,6 +73,7 @@ public class ConnectionThread implements Runnable {
 
 	private void registerUser() throws ClassNotFoundException, IOException {
 		output.writeObject(Messages.OK);
+		output.flush();
 
 		String userName = (String) input.readObject();
 		String password = (String) input.readObject();
@@ -86,14 +88,17 @@ public class ConnectionThread implements Runnable {
 			controller.registerUser(userName, password, rePassword, firstName,
 					lastName, email);
 			output.writeObject(Messages.OK);
+			output.flush();
 		} catch (RegisterUserException e) {
 			output.writeObject(e.getMessage());
+			output.flush();
 			System.err.println(e.getMessage());
 		}
 	}
 
 	private void loginUser() throws IOException, ClassNotFoundException {
 		output.writeObject(Messages.OK);
+		output.flush();
 
 		String username = (String) input.readObject();
 		String password = (String) input.readObject();
@@ -105,8 +110,11 @@ public class ConnectionThread implements Runnable {
 			controller.loginUser(username, password, socket.getInetAddress()
 					.getHostAddress());
 			this.username = username;
+			output.writeObject(Messages.OK);
+			output.flush();
 		} catch (LoginUserException e) {
 			output.writeObject(e.getMessage());
+			output.flush();
 			System.err.println(e.getMessage());
 		}
 
@@ -114,12 +122,16 @@ public class ConnectionThread implements Runnable {
 
 	private void sendUserList() throws IOException {
 		output.writeObject(Messages.OK);
+		output.flush();
 		output.writeObject(Messages.BEGINLIST);
+		output.flush();
 		output.writeObject(sessions);
+		output.flush();
 	}
 
 	private void logout() throws IOException {
 		output.writeObject(Messages.OK);
+		output.flush();
 		
 	}
 

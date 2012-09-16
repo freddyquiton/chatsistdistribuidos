@@ -1,21 +1,21 @@
 package chat.common.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserList implements Serializable {
-	private HashMap<String, User> userList;
+	private ConcurrentHashMap<String, User> userList;
 	
 	public UserList()
 	{
-		userList = new HashMap<>();
+		userList = new ConcurrentHashMap<>();
 	}
 	
 	public boolean addUser(User theUser)
 	{
 		if(userList.containsKey(theUser.getUsername()))
 			return false;
-		userList.put(theUser.getUsername(), theUser);
+		userList.put (theUser.getUsername(), theUser);
 		return true;
 	}
 	

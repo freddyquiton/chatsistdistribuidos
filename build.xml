@@ -22,6 +22,9 @@
 			  <pathelement path="${classes}/common"/>			  
 			</classpath>
 		</javac>
+		<copy todir="${classes}/Client/chat/client/view/resources">
+			<fileset dir="Client/src/chat/client/view/resources"/>
+		</copy>
 	</target>
 	
 	<target name="jar" depends="compile">

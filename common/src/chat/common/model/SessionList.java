@@ -2,13 +2,13 @@ package chat.common.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionList implements Serializable {
-	private HashMap<String, Session> sessions;
+	private ConcurrentHashMap<String, Session> sessions;
 	
 	public SessionList() {
-		sessions = new HashMap<>();
+		sessions = new ConcurrentHashMap<>();
 	}
 	
 	public boolean addSession(Session session) {

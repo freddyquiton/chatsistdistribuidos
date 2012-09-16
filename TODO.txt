@@ -1,8 +1,11 @@
 Servidor:
-Refactorizar codigo para poder realizar un buen control de concurrencia, recurso compartido critico:
-Base de datos de usuario
-Sesiones de usuario (Aun no programado)
+Crear un hilo que permita recibir comandos del lado del servidor
+Implementar mayor seguridad?
 
 Cliente:
-Validacion de datos
-Sockets
+Hacer funcionar el botón Registrarse
+Crear la ventana de sala de chat
+Implementar los chat
+Implementar el LOGOUT
+Crear capas inferiores y abstraidas para todo lo anterior
+Sala de chat, con datos del usuario?

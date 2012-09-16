@@ -1,6 +1,6 @@
 package chat.client.threading;
 
-import chat.client.exceptions.NetworkException;
+import chat.client.exceptions.ServerException;
 import chat.client.networking.ClientToServerManager;
 
 public class RegisterCommand implements ServerCommand {
@@ -23,7 +23,7 @@ public class RegisterCommand implements ServerCommand {
 	}
 
 	@Override
-	public void execute(ClientToServerManager connection) throws NetworkException {
+	public void execute(ClientToServerManager connection) throws ServerException {
 		connection.register(username, password, rePassword, firstName, lastName, email);
 	}
 
