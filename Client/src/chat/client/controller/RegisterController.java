@@ -56,11 +56,11 @@ public class RegisterController {
 			String firstName, String lastName, String email)
 			throws RegisterException {
 		if (!isValidUsername(username))
-			throw new RegisterException("El nombre de usuario debe ser m·ximo 20 car·cteres, y solo letras y n˙meros");
+			throw new RegisterException("El nombre de usuario debe ser m√°ximo 20 car√°cteres, y solo letras y n√∫meros");
 		if(!isValidPassword(password))
-			throw new RegisterException("La contraseÒa debe ser mÌnomo 8 caracteres, y m·ximo 20 caracteres");
+			throw new RegisterException("La contrase√±a debe ser m√≠nimo 8 caracteres, y m√°ximo 20 caracteres");
 		if(!isRePasswordEqualToPassword(password, rePassword))
-			throw new RegisterException("Las contraseÒas no coinciden");
+			throw new RegisterException("Las contrase√±as no coinciden");
 		if(!isValidFirstName(firstName))
 			throw new RegisterException("Los nombres deben ser solo letras");
 		if(!isValidLastName(lastName))

@@ -31,10 +31,10 @@ public class LoginController {
 		if(username == null)
 			throw new LoginException("El nombre de usuario no puede ser nulo");
 		if(password == null)
-			throw new LoginException("La contraseña no puede ser nula");
+			throw new LoginException("La contraseÃ±a no puede ser nula");
 		if(username.isEmpty())
 			throw new LoginException("El nombre de la usuario no puede ser vacio");
 		if(password.isEmpty())
-			throw new LoginException("La contraseña no puede ser vacia");
+			throw new LoginException("La contraseÃ±a no puede ser vacia");
 	}
 }

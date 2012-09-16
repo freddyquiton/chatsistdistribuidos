@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import chat.client.exceptions.ServerException;
+import chat.common.model.SessionList;
 import chat.common.tools.Encripter;
 import chat.common.tools.Messages;
 
@@ -92,6 +93,53 @@ public class ClientToServerManager {
 		} catch (ClassNotFoundException e) {
 			throw new ServerException(e.getMessage());
 		}		
+	}
+	
+	public void logout() throws ServerException {
+		
+		
+		try {
+			String inputMessage;
+			
+			output.writeObject(Messages.LOGOUT);
+			output.flush();
+			inputMessage = (String)input.readObject();
+			if(!inputMessage.equals(Messages.OK))
+				throw new ServerException("Unexpected input " + inputMessage);
+		} catch (IOException e) {
+			throw new ServerException(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			throw new ServerException(e.getMessage());
+		}		
+	}
+	
+	public SessionList userList() throws ServerException {
+		SessionList list = null;
+				
+		try {
+			String inputMessage;
+			
+			output.writeObject(Messages.CONTACTLIST);
+			output.flush();
+			inputMessage = (String)input.readObject();
+			if(!inputMessage.equals(Messages.OK))
+				throw new ServerException("Unexpected input " + inputMessage);
+			inputMessage = (String)input.readObject();
+			if(!inputMessage.equals(Messages.BEGINLIST))
+				throw new ServerException("Unexpected input " + inputMessage);
+			list = (SessionList)input.readObject();
+			if (list == null)
+				throw new ServerException("Unexpected input: null list");
+			if(!inputMessage.equals(Messages.OK))
+				throw new ServerException("Unexpected input " + inputMessage);
+		} catch (IOException e) {
+			throw new ServerException(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			throw new ServerException(e.getMessage());
+		}
+		
+		return list;
+		
 	}
 	
 	public void close() throws ServerException {

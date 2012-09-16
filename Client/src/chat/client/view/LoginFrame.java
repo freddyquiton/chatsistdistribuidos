@@ -17,11 +17,18 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import chat.client.controller.LoginController;
+import chat.client.controller.LogoutController;
 import chat.client.exceptions.LoginException;
+import chat.client.exceptions.LogoutException;
 import chat.client.threading.ServerManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class LoginFrame extends JFrame {
 	private LoginController controller;
@@ -33,13 +40,27 @@ public class LoginFrame extends JFrame {
 	
 	public LoginFrame(ServerManager theServer, String theUrl, int thePort) {
 		super("Cat Chat -Login");
-		setResizable(false);
 		
 		controller = new LoginController(theServer, theUrl, thePort);
 		server = theServer;
 		url = theUrl;
 		port = thePort;
 		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					LogoutController logoutController = new LogoutController(server);
+					logoutController.logout();
+				} catch (LogoutException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+				} finally {
+					dispose();
+					System.exit(0);
+				}
+			}
+		});
+		setResizable(false);
 		setBounds(100, 100, 647, 409);
 		getContentPane().setLayout(new GridLayout(0, 2, 10, 10));
 		
@@ -60,8 +81,7 @@ public class LoginFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					controller.login(txtUsername.getText(), new String(txtPassword.getPassword()));
-					JOptionPane.showMessageDialog(null, "Login exitoso!, ahora podra usar el servicio de chat"
-							, "Login exitoso", JOptionPane.INFORMATION_MESSAGE);
+					enterToRoomChat();					
 				} catch (LoginException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				}
@@ -132,7 +152,7 @@ public class LoginFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 				RegisterFrame registerFrame = new RegisterFrame(server, url, port);
-				registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				registerFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				registerFrame.setVisible(true);
 			}
 		});
@@ -140,7 +160,30 @@ public class LoginFrame extends JFrame {
 		gbc_btnRegistrarse.gridx = 0;
 		gbc_btnRegistrarse.gridy = 1;
 		panel_1.add(btnRegistrarse, gbc_btnRegistrarse);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnArchivo = new JMenu("Archivo");
+		menuBar.add(mnArchivo);
+		
+		JMenuItem mntmSalir = new JMenuItem("Salir");
+		mnArchivo.add(mntmSalir);
+		
+		JMenu mnAyuda = new JMenu("Ayuda");
+		menuBar.add(mnAyuda);
+		
+		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		mnAyuda.add(mntmAcercaDe);
 
+	}
+	
+	private void enterToRoomChat() {
+		dispose();
+		ChatRoomFrame chat = new ChatRoomFrame(server);
+		
+		chat.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		chat.setVisible(true);
 	}
 
 }

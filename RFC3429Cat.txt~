@@ -26,14 +26,6 @@ C: CONTACTLIST
 S: OK | Mensaje de error
 S: BEGINLIST
 S: SessionList
-S: OK
-
-Información usuario
-C: USERINFO
-S: OK | Mensaje de error
-C: username
-S: User
-S: OK
 
 Chatear con alguien fase de chat
 C1: Abre conexion

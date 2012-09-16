@@ -7,23 +7,23 @@ import chat.common.tools.Messages;
 public class ServerManager {
 	private ServerCommandQueue queue;
 	private ServerMessageQueue messages;
-	private boolean isRunning;
+	private boolean running;
 	
 	public ServerManager() {
 		queue = new ServerCommandQueue();
 		messages = new ServerMessageQueue();
-		isRunning = false;
+		running = false;
 	}
 	
 	public void run(String url, int port) throws ServerException {
-		if (isRunning)
+		if (running)
 			return;
 		
 		ClientToServerManager conn = new ClientToServerManager(url, port);
 		Thread thread = new Thread(new ConnectionThread(queue, messages, conn));
 		
 		thread.start();
-		isRunning = true;
+		running = true;
 	}
 	
 	public void registerUser(String username, String password,
@@ -43,5 +43,17 @@ public class ServerManager {
 		if (!message.equals(Messages.OK)) {
 			throw new ServerException(message);
 		}
+	}
+	
+	public void logout() throws InterruptedException, ServerException {
+		queue.addCommand(new LogoutCommand());
+		String message = messages.getMessage();		
+		if (!message.equals(Messages.OK)) {
+			throw new ServerException(message);
+		}
+	}
+	
+	public boolean isRunning() {
+		return running;
 	}
 }

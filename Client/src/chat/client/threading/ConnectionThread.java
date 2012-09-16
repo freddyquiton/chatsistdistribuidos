@@ -18,7 +18,7 @@ public class ConnectionThread implements Runnable {
 	@Override
 	public void run() {
 		ServerCommand command = null;
-		
+		System.out.println("Iniciando conexión con el servidor");
 		try {			
 			do {
 				try {
@@ -28,7 +28,8 @@ public class ConnectionThread implements Runnable {
 				} catch(ServerException networkException) {
 					messages.addMessage(networkException.getMessage());
 				}
-			} while(!(command instanceof LogoutCommand));			
+			} while(!(command instanceof LogoutCommand));
+			System.out.println("Terminando conexion....");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

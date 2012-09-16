@@ -7,6 +7,6 @@ public class LogoutCommand implements ServerCommand {
 	
 	@Override
 	public void execute(ClientToServerManager connection) throws ServerException  {
-		//TODO hacer esto
+		connection.logout();
 	}
 }

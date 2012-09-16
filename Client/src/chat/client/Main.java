@@ -12,7 +12,7 @@ public class Main {
 		ServerManager server = new ServerManager();
 		LoginFrame r = new LoginFrame(server, "localhost", 12345);
 		r.setSize(600, 480);
-		r.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		r.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		r.setVisible(true);
 	}
 

@@ -29,6 +29,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class RegisterFrame extends JFrame {
 
@@ -56,11 +58,17 @@ public class RegisterFrame extends JFrame {
 	 */
 	public RegisterFrame(ServerManager theServer, String theUrl, int thePort) {
 		super("Registrar Usuario");
-		
 		controller = new RegisterController(theServer, theUrl, thePort);
 		server = theServer;
 		url = theUrl;
 		port = thePort;
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				createLoginFrame();
+			}
+		});
 		
 		setBounds(100, 100, 661, 403);
 		contentPane = new JPanel();
@@ -88,7 +96,8 @@ public class RegisterFrame extends JFrame {
 							new String(rePasswordTxt.getPassword()), firstNameTxt.getText(),
 							lastNameTxt.getText(), emailTxt.getText());
 					JOptionPane.showMessageDialog(null, "Registro exitoso!, ahora podra usar el servicio de chat"
-							, "Registro exitoso", JOptionPane.INFORMATION_MESSAGE); 
+							, "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+					createLoginFrame();
 				} catch (RegisterException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				}
@@ -176,7 +185,7 @@ public class RegisterFrame extends JFrame {
 			public void focusLost(FocusEvent arg0) {
 				if(!controller.isValidPassword(new String(passwordTxt.getPassword()))) {
 					lblPasswordError.setText("*");
-					lblError.setText("La contraseña es invalida");
+					lblError.setText("La contraseï¿½a es invalida");
 				} else {
 					lblPasswordError.setText("");
 					lblError.setText("");
@@ -216,7 +225,7 @@ public class RegisterFrame extends JFrame {
 				if(!controller.isRePasswordEqualToPassword(new String(passwordTxt.getPassword()),
 														   new String(rePasswordTxt.getPassword()))) {
 					lblRepasswordError.setText("*");
-					lblError.setText("La contraseña es invalida");
+					lblError.setText("La contraseï¿½a es invalida");
 				} else {
 					lblRepasswordError.setText("");
 					lblError.setText("");
@@ -370,7 +379,7 @@ public class RegisterFrame extends JFrame {
 	private void createLoginFrame() {
 		dispose();
 		LoginFrame loginFrame = new LoginFrame(server, url, port);
-		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		loginFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		loginFrame.setVisible(true);
 	}
 
