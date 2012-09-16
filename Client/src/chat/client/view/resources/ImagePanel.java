@@ -1,4 +1,4 @@
-package chat.client.view;
+package chat.client.view.resources;
 
 import java.awt.Graphics;
 import java.awt.Image;

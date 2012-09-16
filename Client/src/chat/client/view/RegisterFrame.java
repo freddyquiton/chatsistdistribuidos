@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import chat.client.controller.RegisterController;
 import chat.client.exceptions.RegisterException;
 import chat.client.threading.ServerManager;
+import chat.client.view.resources.ImagePanel;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -46,13 +47,21 @@ public class RegisterFrame extends JFrame {
 	private JLabel lblLastNameError;
 	private JLabel lblEmailError;
 	private JLabel lblError;
+	private ServerManager server;
+	private String url;
+	private int port;
 
 	/**
 	 * Create the frame.
 	 */
 	public RegisterFrame(ServerManager theServer, String theUrl, int thePort) {
-		setTitle("Registrar Usuario");
-		controller = new RegisterController(theServer, theUrl, thePort);	
+		super("Registrar Usuario");
+		
+		controller = new RegisterController(theServer, theUrl, thePort);
+		server = theServer;
+		url = theUrl;
+		port = thePort;
+		
 		setBounds(100, 100, 661, 403);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -89,6 +98,11 @@ public class RegisterFrame extends JFrame {
 		panelBotton.add(btnRegister);
 		
 		JButton btnCancel = new JButton("Cancelar");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createLoginFrame();
+			}
+		});
 		panelBotton.add(btnCancel);
 		
 		JPanel panel = new JPanel();
@@ -351,6 +365,13 @@ public class RegisterFrame extends JFrame {
 		gbc_lblError.gridx = 0;
 		gbc_lblError.gridy = 6;
 		panel_1.add(lblError, gbc_lblError);
+	}
+
+	private void createLoginFrame() {
+		dispose();
+		LoginFrame loginFrame = new LoginFrame(server, url, port);
+		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		loginFrame.setVisible(true);
 	}
 
 }

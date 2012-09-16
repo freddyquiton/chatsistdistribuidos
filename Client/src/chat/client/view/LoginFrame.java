@@ -27,11 +27,19 @@ public class LoginFrame extends JFrame {
 	private LoginController controller;
 	private JPasswordField txtPassword;
 	private JTextField txtUsername;
+	private ServerManager server;
+	private String url;
+	private int port;
 	
 	public LoginFrame(ServerManager theServer, String theUrl, int thePort) {
+		super("Cat Chat -Login");
 		setResizable(false);
+		
 		controller = new LoginController(theServer, theUrl, thePort);
-		setTitle("Cat Chat -Login");
+		server = theServer;
+		url = theUrl;
+		port = thePort;
+		
 		setBounds(100, 100, 647, 409);
 		getContentPane().setLayout(new GridLayout(0, 2, 10, 10));
 		
@@ -120,6 +128,14 @@ public class LoginFrame extends JFrame {
 		panel_1.add(lblNoTienesCuenta, gbc_lblNoTienesCuenta);
 		
 		JButton btnRegistrarse = new JButton("Registrarse");
+		btnRegistrarse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				RegisterFrame registerFrame = new RegisterFrame(server, url, port);
+				registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				registerFrame.setVisible(true);
+			}
+		});
 		GridBagConstraints gbc_btnRegistrarse = new GridBagConstraints();
 		gbc_btnRegistrarse.gridx = 0;
 		gbc_btnRegistrarse.gridy = 1;
