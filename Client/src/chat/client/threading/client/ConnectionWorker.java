@@ -34,7 +34,7 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 			
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		destinyUser = new User("prueba", null, null, null, null);
+		destinyUser = new User("prueba", "a", "a", "a", "a");
 		
 		MessageViewerWorker worker = new MessageViewerWorker(textArea, input, server, destinyUser.getUsername());		
 		worker.execute();
