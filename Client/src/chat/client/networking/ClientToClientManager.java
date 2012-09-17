@@ -35,6 +35,7 @@ public class ClientToClientManager {
 		} catch (IOException e) {
 			throw new NetworkException(e.getMessage());
 		}
+		System.out.println("Terminando de escuchar por clientes");
 	}
 
 	private void waitForConnection() throws IOException {
@@ -43,6 +44,14 @@ public class ClientToClientManager {
 		connection = listener.accept();
 
 		panel.addTab("test", new ChatPanel(connection, server, "Minick"));
+	}
+	
+	public void stopListening() throws NetworkException {
+		try {
+			listener.close();
+		} catch (IOException e) {
+			throw new NetworkException(e.getMessage());
+		}
 	}
 
 }

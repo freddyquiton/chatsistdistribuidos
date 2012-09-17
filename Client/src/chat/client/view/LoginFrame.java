@@ -37,14 +37,16 @@ public class LoginFrame extends JFrame {
 	private ServerManager server;
 	private String url;
 	private int port;
+	private int listenPort;
 	
-	public LoginFrame(ServerManager theServer, String theUrl, int thePort) {
+	public LoginFrame(ServerManager theServer, String theUrl, int thePort, int theListenPort) {
 		super("Cat Chat -Login");
 		
 		controller = new LoginController(theServer, theUrl, thePort);
 		server = theServer;
 		url = theUrl;
 		port = thePort;
+		listenPort = theListenPort;
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -153,7 +155,7 @@ public class LoginFrame extends JFrame {
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				RegisterFrame registerFrame = new RegisterFrame(server, url, port);
+				RegisterFrame registerFrame = new RegisterFrame(server, url, port, listenPort);
 				registerFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				registerFrame.setVisible(true);
 			}
@@ -182,7 +184,7 @@ public class LoginFrame extends JFrame {
 	
 	private void enterToRoomChat() {
 		dispose();
-		ChatRoomFrame chat = new ChatRoomFrame(server);
+		ChatRoomFrame chat = new ChatRoomFrame(server, txtUsername.getText(), listenPort);
 		
 		chat.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		chat.setVisible(true);

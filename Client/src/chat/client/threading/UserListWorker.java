@@ -11,10 +11,12 @@ import chat.common.model.SessionList;
 public class UserListWorker extends SwingWorker<Void, String> {
 	private ServerManager server;
 	private JList list;
+	private String username;
 	
-	public UserListWorker(JList theList, ServerManager theServer) {
+	public UserListWorker(JList theList, ServerManager theServer, String theUsername) {
 		list = theList;
 		server = theServer;
+		username = theUsername;
 	}
 
 	@Override
@@ -23,14 +25,18 @@ public class UserListWorker extends SwingWorker<Void, String> {
 		while(server.isRunning()) {
 			try {				
 				SessionList userList = server.getUserList();
-				DefaultListModel model = new DefaultListModel();
+				DefaultListModel<Session> model = new DefaultListModel<Session>();
 				
 				model.clear();
+				
 				for(Session session : userList.getSessionList()) {
-					model.addElement(session);
+					if (!username.equals(session.toString()))
+						model.addElement(session);
 				}
+				
 				list.setModel(model);
-				Thread.sleep(5000);
+				if(server.isRunning())
+					Thread.sleep(5000);
 			} catch (Exception e) {
 				
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);				
@@ -39,5 +45,4 @@ public class UserListWorker extends SwingWorker<Void, String> {
 		System.out.println("Ya no buscar conectados...");
 		return null;
 	}
-
 }

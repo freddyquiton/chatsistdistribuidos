@@ -6,10 +6,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import chat.common.model.SessionList;
+import chat.common.model.User;
 import chat.common.tools.Messages;
+import chat.server.controller.GetUserController;
 import chat.server.controller.LoginUserController;
 import chat.server.controller.LogoutController;
 import chat.server.controller.RegisterUserController;
+import chat.server.exceptions.GetUserException;
 import chat.server.exceptions.LoginUserException;
 import chat.server.exceptions.RegisterUserException;
 import chat.server.model.UserDatabase;
@@ -21,6 +24,7 @@ public class ConnectionThread implements Runnable {
 	private UserDatabase database;
 	private SessionList sessions;
 	private String username;
+	private boolean isLogged;
 
 	public ConnectionThread(Socket theSocket, UserDatabase theDatabase,
 			SessionList theSessions) {
@@ -28,6 +32,7 @@ public class ConnectionThread implements Runnable {
 		database = theDatabase;
 		sessions = theSessions;
 		username = null;
+		isLogged = false;
 	}
 
 	@Override
@@ -46,29 +51,32 @@ public class ConnectionThread implements Runnable {
 					loginUser();
 				} else if (firstMessage.equals(Messages.CONTACTLIST)) {
 					sendUserList();
+				} else if (firstMessage.equals(Messages.GETUSER)) {
+					sendUser();
 				} else if (firstMessage.equals(Messages.LOGOUT)) {
-					logout();					
+					logout();
 				} else {
 					output.writeObject("Error!! unknow message");
 					output.flush();
-					firstMessage = Messages.LOGOUT;					
+					firstMessage = Messages.LOGOUT;
 				}
 			} while (!firstMessage.equals(Messages.LOGOUT));
-			
-			if (username != null) {
-				LogoutController logoutController = new LogoutController(sessions);
-				
-				logoutController.logout(username);
-			}
+
 		} catch (IOException ioException) {
 			System.err.println("Error in networking "
 					+ ioException.getMessage());
 		} catch (ClassNotFoundException classNotFoundException) {
 			System.err.println("Error in networking "
 					+ classNotFoundException.getMessage());
-		}
+		} finally {
+			if (username != null) {
+				LogoutController logoutController = new LogoutController(
+						sessions);
 
-		close();
+				logoutController.logout(username);
+			}
+			close();
+		}
 	}
 
 	private void registerUser() throws ClassNotFoundException, IOException {
@@ -112,6 +120,7 @@ public class ConnectionThread implements Runnable {
 			this.username = username;
 			output.writeObject(Messages.OK);
 			output.flush();
+			isLogged = true;
 		} catch (LoginUserException e) {
 			output.writeObject(e.getMessage());
 			output.flush();
@@ -121,21 +130,49 @@ public class ConnectionThread implements Runnable {
 	}
 
 	private void sendUserList() throws IOException {
-		output.writeObject(Messages.OK);
-		output.flush();
-		output.writeObject(Messages.BEGINLIST);
-		output.flush();
-		output.writeObject(sessions);		
-		output.flush();
-		output.writeObject(Messages.OK);
-		output.flush();
-		output.reset();
+		if (!isLogged)
+			output.writeObject("Permiso denegado");
+		else {
+			output.writeObject(Messages.OK);
+			output.flush();
+			output.writeObject(Messages.BEGINLIST);
+			output.flush();
+			output.writeObject(sessions);
+			output.flush();
+			output.writeObject(Messages.OK);
+			output.flush();
+			output.reset();
+		}
+	}
+
+	private void sendUser() throws IOException, ClassNotFoundException {
+		if (!isLogged)
+			output.writeObject("Permiso denegado");
+		else {
+			output.writeObject(Messages.OK);
+			output.flush();
+
+			String username = (String) input.readObject();
+			GetUserController controller = new GetUserController(database);
+
+			try {
+				User user = controller.getUser(username);
+				output.writeObject(user);
+				output.flush();
+				output.writeObject(Messages.OK);
+				output.flush();
+			} catch (GetUserException e) {
+				output.writeObject(e.getMessage());
+				output.flush();
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 
 	private void logout() throws IOException {
 		output.writeObject(Messages.OK);
 		output.flush();
-		
+
 	}
 
 	private void close() {
@@ -152,9 +189,10 @@ public class ConnectionThread implements Runnable {
 		}
 	}
 
-	private void getStreams() throws IOException {
-		input = new ObjectInputStream(socket.getInputStream());
+	private void getStreams() throws IOException {		
 		output = new ObjectOutputStream(socket.getOutputStream());
+		output.flush();
+		input = new ObjectInputStream(socket.getInputStream());
 	}
 
 }

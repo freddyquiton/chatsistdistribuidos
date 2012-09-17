@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,31 +34,36 @@ public class ChatRoomFrame extends JFrame {
 	private UserListWorker userList;
 	private JList list;
 	private JTabbedPane tabbedPane;
+	private String nick;
+	private int listenPort;
+	private ListenerWorker listener;
 
-	public ChatRoomFrame(ServerManager theServer) {
+	public ChatRoomFrame(ServerManager theServer, String theNick, int theListenPort) {
 		super("Chat Room");
 		server = theServer;
+		nick = theNick;
+		listenPort = theListenPort;
 
-		addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {			
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {				
 				try {
 					LogoutController logoutController = new LogoutController(
 							server);
 					logoutController.logout();
+					userList.get();
+					listener.stopListener();
+					listener.get();
 				} catch (LogoutException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(),
 							"Error", JOptionPane.ERROR_MESSAGE);
-				} finally {
-					while (!userList.isDone())
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-							JOptionPane.showMessageDialog(null,
-									e1.getMessage(), "Error",
-									JOptionPane.ERROR_MESSAGE);
-						}
+				} catch (InterruptedException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (ExecutionException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} finally {										
 					dispose();
 					System.exit(0);
 				}
@@ -85,18 +91,19 @@ public class ChatRoomFrame extends JFrame {
 		list = new JList();
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					Session theSession = (Session) list.getSelectedValue();
-					try {
-						if (theSession != null)
-							tabbedPane.addTab("test", new ChatPanel(new Socket(
-								theSession.getUrl(), 12346), server, "Minick"));
-					} catch (Exception e1) {
-						e1.printStackTrace();
-						JOptionPane.showMessageDialog(null, e1.getMessage(),
-								"Error", JOptionPane.ERROR_MESSAGE);
+			public void valueChanged(ListSelectionEvent e) {				
+				try {
+					Session theSession = (Session) list.getSelectedValue();					
+					if (theSession != null) {
+						String username = theSession.getUsername();
+						
+						tabbedPane.addTab(username, new ChatPanel(new Socket(
+							theSession.getUrl(), listenPort), server, nick));
 					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -128,10 +135,17 @@ public class ChatRoomFrame extends JFrame {
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
 		mnAyuda.add(mntmAcercaDe);
 
-		userList = new UserListWorker(list, server);
+		userList = new UserListWorker(list, server, nick);
 		userList.execute();
-		ListenerWorker listener = new ListenerWorker(tabbedPane, server, 12346);
+		listener = new ListenerWorker(tabbedPane, server, listenPort);
 		listener.execute();
+	}
+	
+	public int searchTab(String title) {
+		for(int i = 0; i < tabbedPane.getTabCount(); i++)
+			if (tabbedPane.getTitleAt(i).equals(title))
+				return i;
+		return -1;
 	}
 
 }

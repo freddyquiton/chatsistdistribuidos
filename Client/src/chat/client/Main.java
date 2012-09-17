@@ -10,7 +10,14 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		ServerManager server = new ServerManager();
-		LoginFrame r = new LoginFrame(server, "localhost", 12345);
+		String url = "localhost";
+		
+		if (args.length >= 1) {
+			System.out.println("Conectandose a : " + args[0]);
+			url = args[0];
+		}
+		
+		LoginFrame r = new LoginFrame(server, url, 12345, 12346);
 		r.setSize(600, 480);
 		r.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		r.setVisible(true);

@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -24,13 +25,14 @@ public class ChatPanel extends JPanel {
 	private JTextArea textMessages;
 	private MessageQueue messages;
 	private String nick;
+	private ConnectionWorker worker;
 
 	/**
 	 * Create the panel.
 	 */
 	public ChatPanel(Socket connection, ServerManager theServer, String theNick) {
 		messages = new MessageQueue();
-		nick = theNick;
+		nick = theNick;		
 		
 		setLayout(new BorderLayout(10, 10));
 		
@@ -121,6 +123,7 @@ public class ChatPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					messages.addMessage(nick + textMessages.getText());
+					textMessages.setText("");
 				} catch (InterruptedException e) {
 					
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -132,10 +135,18 @@ public class ChatPanel extends JPanel {
 		gbc_btnSend.gridy = 1;
 		panel_1.add(btnSend, gbc_btnSend);
 		
-		ConnectionWorker worker = new ConnectionWorker(connection, theServer, textArea, messages);		
+		worker = new ConnectionWorker(connection, theServer, textArea, messages);		
 		worker.execute();
 	}
 	
-	
+	public void waitUnitlFinish() {
+		try {
+			worker.get();
+		} catch (InterruptedException e ) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (ExecutionException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 }

@@ -2,7 +2,6 @@ package chat.client.threading.client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
@@ -12,11 +11,13 @@ import chat.common.tools.Messages;
 
 public class MessageViewerWorker extends SwingWorker<Void, Void> {
 	private JTextArea textArea;
-	private ObjectInputStream input;
+	private ObjectInputStream input;	
 	private ServerManager server;
 	private String username;
-	
-	public MessageViewerWorker(JTextArea theTextArea, ObjectInputStream theInput, ServerManager theServer, String destinatary) {
+
+	public MessageViewerWorker(JTextArea theTextArea,
+			ObjectInputStream theInput, ServerManager theServer,
+			String destinatary) {
 		textArea = theTextArea;
 		input = theInput;
 		server = theServer;
@@ -26,25 +27,32 @@ public class MessageViewerWorker extends SwingWorker<Void, Void> {
 	@Override
 	protected Void doInBackground() {
 		String message = "";
-		
-		while(server.isRunning() && !message.equals(Messages.ENDCONVERSATION)) {			
-			try {
-				message = (String)input.readObject();
-			} catch (Exception e) {
+
+		try {
+			while (server.isRunning() && !input.equals(Messages.ENDCLIENT)) {
 				
-				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);				
+				message = (String) input.readObject();
+				System.out.println(message);
+
+				textArea.append(username + " dijo: " + message + "\n");
 			}
 			
-			textArea.append(username + " dijo: " + message + "\n");
-		}
-		
-		try {
-			input.close();
-		} catch (IOException e) {
+		} catch (IOException e) {			
+			System.err.println(e.getMessage());			
+		} catch (ClassNotFoundException e) {
 			
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);			
+		} finally {
+
+			try {
+				input.close();
+			} catch (IOException e) {			
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
-		
+
 		return null;
 	}
 }

@@ -20,7 +20,7 @@
 		<javac srcdir="Client/src" destdir="${classes}/Client" includeantruntime="false">
 			<classpath>
 			  <pathelement path="${classes}/common"/>			  
-			</classpath>
+			</classpath>			
 		</javac>
 		<copy todir="${classes}/Client/chat/client/view/resources">
 			<fileset dir="Client/src/chat/client/view/resources"/>

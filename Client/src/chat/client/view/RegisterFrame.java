@@ -52,16 +52,18 @@ public class RegisterFrame extends JFrame {
 	private ServerManager server;
 	private String url;
 	private int port;
+	private int listenPort;
 
 	/**
 	 * Create the frame.
 	 */
-	public RegisterFrame(ServerManager theServer, String theUrl, int thePort) {
+	public RegisterFrame(ServerManager theServer, String theUrl, int thePort, int theListenPort) {
 		super("Registrar Usuario");
 		controller = new RegisterController(theServer, theUrl, thePort);
 		server = theServer;
 		url = theUrl;
 		port = thePort;
+		listenPort = theListenPort;
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -379,7 +381,7 @@ public class RegisterFrame extends JFrame {
 
 	private void createLoginFrame() {
 		dispose();
-		LoginFrame loginFrame = new LoginFrame(server, url, port);
+		LoginFrame loginFrame = new LoginFrame(server, url, port, listenPort);
 		loginFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		loginFrame.setVisible(true);
 	}
