@@ -53,6 +53,7 @@ public class LoginFrame extends JFrame {
 					LogoutController logoutController = new LogoutController(server);
 					logoutController.logout();
 				} catch (LogoutException e1) {
+					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				} finally {
 					dispose();					
@@ -83,6 +84,7 @@ public class LoginFrame extends JFrame {
 					controller.login(txtUsername.getText(), new String(txtPassword.getPassword()));
 					enterToRoomChat();					
 				} catch (LoginException e) {
+					
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				}
 			}

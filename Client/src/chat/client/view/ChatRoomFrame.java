@@ -53,6 +53,7 @@ public class ChatRoomFrame extends JFrame {
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e1) {
+							e1.printStackTrace();
 							JOptionPane.showMessageDialog(null,
 									e1.getMessage(), "Error",
 									JOptionPane.ERROR_MESSAGE);
@@ -88,9 +89,11 @@ public class ChatRoomFrame extends JFrame {
 				if (!e.getValueIsAdjusting()) {
 					Session theSession = (Session) list.getSelectedValue();
 					try {
-						tabbedPane.addTab("test", new ChatPanel(new Socket(
+						if (theSession != null)
+							tabbedPane.addTab("test", new ChatPanel(new Socket(
 								theSession.getUrl(), 12346), server, "Minick"));
 					} catch (Exception e1) {
+						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, e1.getMessage(),
 								"Error", JOptionPane.ERROR_MESSAGE);
 					}

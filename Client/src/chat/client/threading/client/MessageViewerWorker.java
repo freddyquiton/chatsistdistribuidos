@@ -31,7 +31,8 @@ public class MessageViewerWorker extends SwingWorker<Void, Void> {
 			try {
 				message = (String)input.readObject();
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);				
 			}
 			
 			textArea.append(username + " dijo: " + message + "\n");
@@ -40,6 +41,7 @@ public class MessageViewerWorker extends SwingWorker<Void, Void> {
 		try {
 			input.close();
 		} catch (IOException e) {
+			
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		

@@ -35,6 +35,7 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 		try {
 			getStreams();
 		} catch (IOException e) {
+			
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		destinyUser = new User("prueba", null, null, null, null);
@@ -51,8 +52,10 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 				msg = messages.getMessage();
 			}
 		} catch (InterruptedException e) {
+			
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
+			
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		
@@ -60,8 +63,9 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 	}
 	
 	private void getStreams() throws IOException {
-		input = new ObjectInputStream(socket.getInputStream());
 		output = new ObjectOutputStream(socket.getOutputStream());
+		output.flush();
+		input = new ObjectInputStream(socket.getInputStream());		
 	}
 	
 	private void sendMessage(String message) throws IOException {

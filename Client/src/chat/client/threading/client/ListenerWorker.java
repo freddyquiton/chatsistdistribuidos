@@ -26,6 +26,7 @@ public class ListenerWorker extends SwingWorker<Void, Void> {
 			
 			client.runServer();			
 		} catch (NetworkException e) {
+			
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return null;

@@ -122,6 +122,7 @@ public class ChatPanel extends JPanel {
 				try {
 					messages.addMessage(nick + textMessages.getText());
 				} catch (InterruptedException e) {
+					
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}

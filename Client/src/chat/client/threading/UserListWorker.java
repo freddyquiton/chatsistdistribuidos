@@ -32,6 +32,7 @@ public class UserListWorker extends SwingWorker<Void, String> {
 				list.setModel(model);
 				Thread.sleep(5000);
 			} catch (Exception e) {
+				
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);				
 			}
 		}

@@ -99,6 +99,7 @@ public class RegisterFrame extends JFrame {
 							, "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
 					createLoginFrame();
 				} catch (RegisterException e) {
+					
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				}
 			}

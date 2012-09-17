@@ -31,7 +31,7 @@ public class ConnectionThread implements Runnable {
 			} while(!(command instanceof LogoutCommand));
 			System.out.println("Terminando conexion....");
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			
 		}
 		
 	}
