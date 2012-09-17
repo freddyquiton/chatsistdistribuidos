@@ -30,7 +30,7 @@ public class ChatPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public ChatPanel(Socket connection, ServerManager theServer, String theNick) {
+	public ChatPanel(Socket connection, ServerManager theServer, String theNick, String destinyNick) {
 		messages = new MessageQueue();
 		nick = theNick;		
 		
@@ -122,7 +122,7 @@ public class ChatPanel extends JPanel {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					messages.addMessage(nick + textMessages.getText());
+					messages.addMessage(nick + " dijo:" + textMessages.getText());
 					textMessages.setText("");
 				} catch (InterruptedException e) {
 					
@@ -135,7 +135,7 @@ public class ChatPanel extends JPanel {
 		gbc_btnSend.gridy = 1;
 		panel_1.add(btnSend, gbc_btnSend);
 		
-		worker = new ConnectionWorker(connection, theServer, textArea, messages);		
+		worker = new ConnectionWorker(connection, theServer, textArea, messages, destinyNick, lblNombre, lblEmail, labelUserName);		
 		worker.execute();
 	}
 	
@@ -147,6 +147,6 @@ public class ChatPanel extends JPanel {
 		} catch (ExecutionException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-	}
+	}	
 
 }

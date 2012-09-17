@@ -54,6 +54,11 @@ public class ChatRoomFrame extends JFrame {
 					userList.get();
 					listener.stopListener();
 					listener.get();
+					for(int i = 0; i < tabbedPane.getTabCount(); i++) {
+						System.out.println("Esperando");
+						if (tabbedPane.getTabComponentAt(i) instanceof ChatPanel)
+							((ChatPanel)tabbedPane.getTabComponentAt(i)).waitUnitlFinish();
+					}
 				} catch (LogoutException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(),
 							"Error", JOptionPane.ERROR_MESSAGE);
@@ -95,10 +100,16 @@ public class ChatRoomFrame extends JFrame {
 				try {
 					Session theSession = (Session) list.getSelectedValue();					
 					if (theSession != null) {
-						String username = theSession.getUsername();
+						String username = theSession.getUsername();						
+						int index = searchTab(username);
 						
-						tabbedPane.addTab(username, new ChatPanel(new Socket(
-							theSession.getUrl(), listenPort), server, nick));
+						if (index == -1)
+							tabbedPane.addTab(username, new ChatPanel(new Socket(
+									theSession.getUrl(), listenPort), server, nick, theSession.getUsername()));
+						else {
+							//TODO alguna manera de ver si esta activo
+							tabbedPane.setSelectedIndex(index);							
+						}
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -137,11 +148,11 @@ public class ChatRoomFrame extends JFrame {
 
 		userList = new UserListWorker(list, server, nick);
 		userList.execute();
-		listener = new ListenerWorker(tabbedPane, server, listenPort);
+		listener = new ListenerWorker(tabbedPane, server, listenPort, nick);
 		listener.execute();
 	}
 	
-	public int searchTab(String title) {
+	private int searchTab(String title) {
 		for(int i = 0; i < tabbedPane.getTabCount(); i++)
 			if (tabbedPane.getTitleAt(i).equals(title))
 				return i;

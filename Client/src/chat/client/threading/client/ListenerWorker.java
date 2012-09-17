@@ -14,11 +14,11 @@ public class ListenerWorker extends SwingWorker<Void, Void> {
 	private int port;
 	private ClientToClientManager client;
 	
-	public ListenerWorker(JTabbedPane thePanel, ServerManager theServer, int thePort) {
+	public ListenerWorker(JTabbedPane thePanel, ServerManager theServer, int thePort, String myNick) {
 		panel = thePanel;
 		server = theServer;
 		port = thePort;
-		client = new ClientToClientManager(panel, server, port);
+		client = new ClientToClientManager(panel, server, port, myNick);
 	}
 
 	@Override

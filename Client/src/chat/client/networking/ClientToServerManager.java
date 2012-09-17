@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import chat.client.exceptions.ServerException;
 import chat.common.model.SessionList;
+import chat.common.model.User;
 import chat.common.tools.Encripter;
 import chat.common.tools.Messages;
 
@@ -141,6 +142,34 @@ public class ClientToServerManager {
 		
 		return list;
 		
+	}
+	
+	public User getUser(String username) throws ServerException {
+		User user = null;
+		
+		try {
+			String inputMessage;
+			
+			output.writeObject(Messages.GETUSER);
+			output.flush();
+			inputMessage = (String)input.readObject();
+			if(!inputMessage.equals(Messages.OK))
+				throw new ServerException("Unexpected input " + inputMessage);
+			output.writeObject(username);
+			output.flush();
+			
+			user = (User)input.readObject();
+			if (user == null)
+				throw new ServerException("Unexpected input: null user");
+			inputMessage = (String)input.readObject();
+			if(!inputMessage.equals(Messages.OK))
+				throw new ServerException("Unexpected input " + inputMessage);
+			System.out.println("USUARIO:D");
+		} catch(Exception e) {
+			throw new ServerException(e.getMessage());
+		}
+		
+		return user;
 	}
 	
 	public void close() throws ServerException {

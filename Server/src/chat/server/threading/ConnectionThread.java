@@ -153,6 +153,7 @@ public class ConnectionThread implements Runnable {
 			output.flush();
 
 			String username = (String) input.readObject();
+			System.out.println("Searching "+ username);
 			GetUserController controller = new GetUserController(database);
 
 			try {

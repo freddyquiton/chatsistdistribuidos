@@ -3,6 +3,7 @@ package chat.client.threading;
 import chat.client.exceptions.ServerException;
 import chat.client.networking.ClientToServerManager;
 import chat.common.model.SessionList;
+import chat.common.model.User;
 import chat.common.tools.Messages;
 
 public class ServerManager {
@@ -71,6 +72,23 @@ public class ServerManager {
 		}
 		
 		return command.getList();
+	}
+	
+	public User getUser(String username) throws InterruptedException, ServerException {
+		GetUserCommand command = new GetUserCommand(username);
+		
+		queue.addCommand(command);
+		
+		String message = messages.getMessage();
+		if (!message.equals(Messages.OK)) {
+			throw new ServerException(message);
+		}
+		
+		while(!command.isReady()) {
+			Thread.sleep(100);			
+		}
+		
+		return command.getUser();
 	}
 	
 	public boolean isRunning() {
