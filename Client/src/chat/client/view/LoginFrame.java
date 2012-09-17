@@ -51,16 +51,7 @@ public class LoginFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				try {
-					LogoutController logoutController = new LogoutController(server);
-					logoutController.logout();
-				} catch (LogoutException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
-				} finally {
-					dispose();					
-					System.exit(0);
-				}
+				exitApp();
 			}
 		});
 		setResizable(false);
@@ -172,22 +163,46 @@ public class LoginFrame extends JFrame {
 		menuBar.add(mnArchivo);
 		
 		JMenuItem mntmSalir = new JMenuItem("Salir");
+		mntmSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				exitApp();
+			}
+		});
 		mnArchivo.add(mntmSalir);
 		
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
 		
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AboutFrame about = new AboutFrame();
+				about.setVisible(true);
+			}
+		});
 		mnAyuda.add(mntmAcercaDe);
 
 	}
 	
 	private void enterToRoomChat() {
 		dispose();
-		ChatRoomFrame chat = new ChatRoomFrame(server, txtUsername.getText(), listenPort);
+		ChatRoomFrame chat = new ChatRoomFrame(server, txtUsername.getText(), listenPort, url, port);
 		
 		chat.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		chat.setVisible(true);
+	}
+
+	private void exitApp() {
+		try {
+			LogoutController logoutController = new LogoutController(server);
+			logoutController.logout();
+		} catch (LogoutException e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+		} finally {
+			dispose();					
+			System.exit(0);
+		}
 	}
 
 }

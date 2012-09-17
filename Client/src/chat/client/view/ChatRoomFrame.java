@@ -28,6 +28,8 @@ import chat.client.threading.UserListWorker;
 import chat.client.threading.client.ListenerWorker;
 import chat.common.model.Session;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ChatRoomFrame extends JFrame {
 	private ServerManager server;
@@ -37,41 +39,21 @@ public class ChatRoomFrame extends JFrame {
 	private String nick;
 	private int listenPort;
 	private ListenerWorker listener;
+	private String url;
+	private int serverPort;
 
-	public ChatRoomFrame(ServerManager theServer, String theNick, int theListenPort) {
+	public ChatRoomFrame(ServerManager theServer, String theNick, int theListenPort, String theUrl, int theServerPort) {
 		super("Chat Room");
 		server = theServer;
 		nick = theNick;
 		listenPort = theListenPort;
+		url = theUrl;
+		serverPort = theServerPort;
 
 		addWindowListener(new WindowAdapter() {			
 			@Override
 			public void windowClosing(WindowEvent e) {				
-				try {
-					LogoutController logoutController = new LogoutController(
-							server);
-					logoutController.logout();
-					userList.get();
-					listener.stopListener();
-					listener.get();
-					for(int i = 0; i < tabbedPane.getTabCount(); i++) {
-						System.out.println("Esperando");
-						if (tabbedPane.getTabComponentAt(i) instanceof ChatPanel)
-							((ChatPanel)tabbedPane.getTabComponentAt(i)).waitUnitlFinish();
-					}
-				} catch (LogoutException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				} catch (InterruptedException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				} catch (ExecutionException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				} finally {										
-					dispose();
-					System.exit(0);
-				}
+				exitApp();
 			}
 		});
 		setBounds(100, 100, 918, 532);
@@ -135,15 +117,31 @@ public class ChatRoomFrame extends JFrame {
 		menuBar.add(mnArchivo);
 
 		JMenuItem mntmLogout = new JMenuItem("Logout");
+		mntmLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				logout();
+			}
+		});
 		mnArchivo.add(mntmLogout);
 
 		JMenuItem mntmSalir = new JMenuItem("Salir");
+		mntmSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exitApp();
+			}
+		});
 		mnArchivo.add(mntmSalir);
 
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
 
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AboutFrame about = new AboutFrame();
+				about.setVisible(true);
+			}
+		});
 		mnAyuda.add(mntmAcercaDe);
 
 		userList = new UserListWorker(list, server, nick);
@@ -157,6 +155,64 @@ public class ChatRoomFrame extends JFrame {
 			if (tabbedPane.getTitleAt(i).equals(title))
 				return i;
 		return -1;
+	}
+	
+	private void logout() {
+		try {
+			LogoutController logoutController = new LogoutController(
+					server);
+			logoutController.logout();
+			userList.get();
+			listener.stopListener();
+			listener.get();
+			for(int i = 0; i < tabbedPane.getTabCount(); i++) {
+				System.out.println("Esperando");
+				if (tabbedPane.getTabComponentAt(i) instanceof ChatPanel)
+					((ChatPanel)tabbedPane.getTabComponentAt(i)).waitUnitlFinish();
+			}
+		} catch (LogoutException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} catch (InterruptedException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} catch (ExecutionException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			dispose();
+			LoginFrame loginFrame = new LoginFrame(server, url, serverPort, listenPort);
+			loginFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			loginFrame.setVisible(true);
+		}
+	}
+
+	private void exitApp() {
+		try {
+			LogoutController logoutController = new LogoutController(
+					server);
+			logoutController.logout();
+			userList.get();
+			listener.stopListener();
+			listener.get();
+			for(int i = 0; i < tabbedPane.getTabCount(); i++) {
+				System.out.println("Esperando");
+				if (tabbedPane.getTabComponentAt(i) instanceof ChatPanel)
+					((ChatPanel)tabbedPane.getTabComponentAt(i)).waitUnitlFinish();
+			}
+		} catch (LogoutException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} catch (InterruptedException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} catch (ExecutionException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} finally {										
+			dispose();
+			System.exit(0);
+		}
 	}
 
 }
