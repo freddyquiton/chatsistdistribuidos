@@ -1,4 +1,4 @@
-
+﻿
 Registrarse
 Cliente: Solicita conexion
 Servidor acepta
@@ -41,11 +41,16 @@ C2: Acepta
 C1: Mensaje
 C2: Mensaje
 .....
-C1: EXIT (Cierra conexion)
-C2: Cierra conexion
 
 Logout
 C: LOGOUT
 S: OK
 C: Cierra conexion
 S: Cierra conexion
+
+DatosUsuario
+C: GETUSER
+S: OK  | mensaje de error
+C: username
+S: (usuario) | mensaje de error
+S: OK
