@@ -19,4 +19,9 @@ public class Session implements Serializable {
 		return url;
 	}	
 	
+	@Override
+	public String toString() {
+		return username;
+	}
+	
 }

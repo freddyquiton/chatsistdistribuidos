@@ -4,26 +4,34 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.net.Socket;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import chat.client.controller.LogoutController;
 import chat.client.exceptions.LogoutException;
 import chat.client.threading.ServerManager;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import chat.client.threading.UserListWorker;
+import chat.client.threading.client.ListenerWorker;
+import chat.common.model.Session;
 
 public class ChatRoomFrame extends JFrame {
-	ServerManager server;
+	private ServerManager server;
+	private UserListWorker userList;
+	private JList list;
+	private JTabbedPane tabbedPane;
 
 	public ChatRoomFrame(ServerManager theServer) {
 		super("Chat Room");
@@ -38,7 +46,13 @@ public class ChatRoomFrame extends JFrame {
 				} catch (LogoutException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				} finally {
-					dispose();
+					while(!userList.isDone())
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e1) {
+							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					dispose();					
 					System.exit(0);
 				}
 			}
@@ -62,18 +76,26 @@ public class ChatRoomFrame extends JFrame {
 		gbc_lblListaDeContactos.gridy = 0;
 		panel.add(lblListaDeContactos, gbc_lblListaDeContactos);
 		
-		JList list = new JList();
+		list = new JList();
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				Session theSession = (Session)list.getSelectedValue();
+				try {
+					tabbedPane.addTab("test", new ChatPanel(new Socket(theSession.getUrl(), 12346), server, "Minick"));
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		GridBagConstraints gbc_list = new GridBagConstraints();
 		gbc_list.fill = GridBagConstraints.BOTH;
 		gbc_list.gridx = 0;
 		gbc_list.gridy = 1;
 		panel.add(list, gbc_list);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		getContentPane().add(tabbedPane, BorderLayout.CENTER);		
 		
-		tabbedPane.addTab("Chat1", new ChatPanel());
-		tabbedPane.addTab("Chat2", new ChatPanel());
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -92,6 +114,11 @@ public class ChatRoomFrame extends JFrame {
 		
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de...");
 		mnAyuda.add(mntmAcercaDe);
+		
+		userList = new UserListWorker(list, server);
+		userList.execute();
+		ListenerWorker listener = new ListenerWorker(tabbedPane, server, 12346);
+		listener.execute();
 	}
 
 }

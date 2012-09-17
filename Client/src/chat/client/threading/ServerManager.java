@@ -2,16 +2,17 @@ package chat.client.threading;
 
 import chat.client.exceptions.ServerException;
 import chat.client.networking.ClientToServerManager;
+import chat.common.model.SessionList;
 import chat.common.tools.Messages;
 
 public class ServerManager {
 	private ServerCommandQueue queue;
-	private ServerMessageQueue messages;
+	private MessageQueue messages;
 	private boolean running;
 	
 	public ServerManager() {
 		queue = new ServerCommandQueue();
-		messages = new ServerMessageQueue();
+		messages = new MessageQueue();
 		running = false;
 	}
 	
@@ -51,6 +52,25 @@ public class ServerManager {
 		if (!message.equals(Messages.OK)) {
 			throw new ServerException(message);
 		}
+		running = false;
+	}
+	
+	public SessionList getUserList() throws InterruptedException, ServerException {
+		UserListCommand command = new UserListCommand();
+		
+		queue.addCommand(command);
+		
+		String message = messages.getMessage();		
+		
+		if (!message.equals(Messages.OK)) {
+			throw new ServerException(message);
+		}
+		
+		while(!command.isReady()) {
+			Thread.sleep(100);			
+		}
+		
+		return command.getList();
 	}
 	
 	public boolean isRunning() {

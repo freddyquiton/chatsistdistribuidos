@@ -7,4 +7,5 @@ public class Messages {
 	public static final String LOGIN = "LOGIN";
 	public static final String CONTACTLIST = "CONTACTLIST";
 	public static final String BEGINLIST = "BEGINLIST";
+	public static final String ENDCONVERSATION = "END.";
 }

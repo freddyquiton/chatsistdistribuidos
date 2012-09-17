@@ -7,9 +7,9 @@ import chat.common.tools.Messages;
 public class ConnectionThread implements Runnable {
 	private ServerCommandQueue queue;
 	private ClientToServerManager connection;
-	private ServerMessageQueue messages;
+	private MessageQueue messages;
 	
-	public ConnectionThread(ServerCommandQueue theQueue, ServerMessageQueue theMessages, ClientToServerManager conn) {
+	public ConnectionThread(ServerCommandQueue theQueue, MessageQueue theMessages, ClientToServerManager conn) {
 		queue = theQueue;
 		connection = conn;
 		messages = theMessages;

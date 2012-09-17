@@ -2,10 +2,10 @@ package chat.client.threading;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ServerMessageQueue {
+public class MessageQueue {
 	private ArrayBlockingQueue<String> buffer;
 	
-	public ServerMessageQueue() {
+	public MessageQueue() {
 		buffer = new ArrayBlockingQueue<>(1);
 	}
 	

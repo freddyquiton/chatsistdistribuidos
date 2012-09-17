@@ -130,6 +130,7 @@ public class ClientToServerManager {
 			list = (SessionList)input.readObject();
 			if (list == null)
 				throw new ServerException("Unexpected input: null list");
+			inputMessage = (String)input.readObject();
 			if(!inputMessage.equals(Messages.OK))
 				throw new ServerException("Unexpected input " + inputMessage);
 		} catch (IOException e) {

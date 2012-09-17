@@ -55,7 +55,7 @@ public class LoginFrame extends JFrame {
 				} catch (LogoutException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				} finally {
-					dispose();
+					dispose();					
 					System.exit(0);
 				}
 			}

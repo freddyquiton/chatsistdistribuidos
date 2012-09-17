@@ -125,8 +125,11 @@ public class ConnectionThread implements Runnable {
 		output.flush();
 		output.writeObject(Messages.BEGINLIST);
 		output.flush();
-		output.writeObject(sessions);
+		output.writeObject(sessions);		
 		output.flush();
+		output.writeObject(Messages.OK);
+		output.flush();
+		output.reset();
 	}
 
 	private void logout() throws IOException {

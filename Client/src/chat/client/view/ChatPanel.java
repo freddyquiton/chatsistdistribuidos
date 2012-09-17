@@ -1,20 +1,37 @@
 package chat.client.view;
 
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.JTextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.Socket;
+
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import chat.client.threading.MessageQueue;
+import chat.client.threading.ServerManager;
+import chat.client.threading.client.ConnectionWorker;
 
 public class ChatPanel extends JPanel {
+	private JTextArea textArea;
+	private JTextArea textMessages;
+	private MessageQueue messages;
+	private String nick;
 
 	/**
 	 * Create the panel.
 	 */
-	public ChatPanel() {
+	public ChatPanel(Socket connection, ServerManager theServer, String theNick) {
+		messages = new MessageQueue();
+		nick = theNick;
+		
 		setLayout(new BorderLayout(10, 10));
 		
 		JPanel panel = new JPanel();
@@ -70,8 +87,8 @@ public class ChatPanel extends JPanel {
 		gbc_label_1.gridy = 2;
 		panel.add(label_1, gbc_label_1);
 		
-		JTextArea textArea = new JTextArea();
-		add(textArea, BorderLayout.CENTER);
+		textArea = new JTextArea();
+		add(new JScrollPane(textArea), BorderLayout.CENTER);		
 		
 		JPanel panel_1 = new JPanel();
 		add(panel_1, BorderLayout.SOUTH);
@@ -90,20 +107,34 @@ public class ChatPanel extends JPanel {
 		gbc_lblEscribeAca.gridy = 0;
 		panel_1.add(lblEscribeAca, gbc_lblEscribeAca);
 		
-		JTextArea textArea_1 = new JTextArea();
-		GridBagConstraints gbc_textArea_1 = new GridBagConstraints();
-		gbc_textArea_1.insets = new Insets(0, 0, 0, 5);
-		gbc_textArea_1.fill = GridBagConstraints.BOTH;
-		gbc_textArea_1.gridx = 0;
-		gbc_textArea_1.gridy = 1;
-		panel_1.add(textArea_1, gbc_textArea_1);
+		textMessages = new JTextArea();
+		textMessages.setRows(1);
+		GridBagConstraints gbc_textMessages = new GridBagConstraints();
+		gbc_textMessages.insets = new Insets(0, 0, 0, 5);
+		gbc_textMessages.fill = GridBagConstraints.BOTH;
+		gbc_textMessages.gridx = 0;
+		gbc_textMessages.gridy = 1;		
+		panel_1.add(new JScrollPane(textMessages), gbc_textMessages);
 		
-		JButton btnEnviar = new JButton("Enviar");
-		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
-		gbc_btnEnviar.gridx = 1;
-		gbc_btnEnviar.gridy = 1;
-		panel_1.add(btnEnviar, gbc_btnEnviar);
-
+		JButton btnSend = new JButton("Enviar");
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					messages.addMessage(nick + textMessages.getText());
+				} catch (InterruptedException e) {
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		GridBagConstraints gbc_btnSend = new GridBagConstraints();
+		gbc_btnSend.gridx = 1;
+		gbc_btnSend.gridy = 1;
+		panel_1.add(btnSend, gbc_btnSend);
+		
+		ConnectionWorker worker = new ConnectionWorker(connection, theServer, textArea, messages);		
+		worker.execute();
 	}
+	
+	
 
 }
