@@ -78,15 +78,16 @@ public class ChatRoomFrame extends JFrame {
 		
 		list = new JList();
 		list.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent arg0) {
+			public void valueChanged(ListSelectionEvent e) {
 				Session theSession = (Session)list.getSelectedValue();
 				try {
 					tabbedPane.addTab("test", new ChatPanel(new Socket(theSession.getUrl(), 12346), server, "Minick"));
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
+		
 		GridBagConstraints gbc_list = new GridBagConstraints();
 		gbc_list.fill = GridBagConstraints.BOTH;
 		gbc_list.gridx = 0;
