@@ -27,11 +27,7 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 		socket = connection;
 		server = theServer;
 		messages = queue;
-		textArea = txtArea;	
-	}
-	
-	@Override
-	protected Void doInBackground() {
+		textArea = txtArea;
 		try {
 			getStreams();
 		} catch (IOException e) {
@@ -42,8 +38,10 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 		
 		MessageViewerWorker worker = new MessageViewerWorker(textArea, input, server, destinyUser.getUsername());		
 		worker.execute();
-		
-		
+	}
+	
+	@Override
+	protected Void doInBackground() {
 		try {
 			String msg = messages.getMessage();
 			
