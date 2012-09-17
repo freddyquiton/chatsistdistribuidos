@@ -51,11 +51,9 @@ public class ClientToClientManager {
 			SessionList list = server.getUserList();
 
 			String nick = "";		
-			
-			System.out.println(url);
-			for (Session session : list.getSessionList()) {
-				if (session.getUrl().equals(url)) {
-					System.out.println(session.getUrl());
+						
+			for (Session session : list.getSessionList()) {				
+				if (session.getUrl().equals(url)) {					
 					nick = session.getUsername();
 					break;
 				}

@@ -12,16 +12,13 @@ import chat.common.tools.Messages;
 public class MessageViewerWorker extends SwingWorker<Void, Void> {
 	private JTextArea textArea;
 	private ObjectInputStream input;	
-	private ServerManager server;
-	private String username;
+	private ServerManager server;	
 
 	public MessageViewerWorker(JTextArea theTextArea,
-			ObjectInputStream theInput, ServerManager theServer,
-			String destinatary) {
+			ObjectInputStream theInput, ServerManager theServer) {
 		textArea = theTextArea;
 		input = theInput;
-		server = theServer;
-		username = destinatary;
+		server = theServer;		
 	}
 
 	@Override
@@ -34,7 +31,7 @@ public class MessageViewerWorker extends SwingWorker<Void, Void> {
 				message = (String) input.readObject();
 				System.out.println(message);
 
-				textArea.append(username + " dijo: " + message + "\n");
+				textArea.append(message + "\n");
 			}
 			
 		} catch (IOException e) {			
