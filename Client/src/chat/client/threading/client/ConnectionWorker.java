@@ -60,8 +60,8 @@ public class ConnectionWorker extends SwingWorker<Void, Void> {
 	}
 	
 	private void getStreams() throws IOException {
-		output = new ObjectOutputStream(socket.getOutputStream());				
 		input = new ObjectInputStream(socket.getInputStream());
+		output = new ObjectOutputStream(socket.getOutputStream());
 	}
 	
 	private void sendMessage(String message) throws IOException {
